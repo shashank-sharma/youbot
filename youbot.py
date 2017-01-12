@@ -1,17 +1,18 @@
 '''
 
 
-###    ##    #########
-###    ##    ##       #
- ###  ##     ##       #
-   ###       #########
-   ###       ##       #
-   ###       #########
+####    ##    ##########
+####    ##    ###       #
+ ####  ##     ###      #
+   ####       ##########
+   ####       ###       #
+   ####       ##########
 
 YouBot - by Shashank Sharma
 
 
 #issue1 : youwatch not working ... Done
+#issue2 : remind function taking input ... Done
 
 '''
 from __future__ import unicode_literals
@@ -21,6 +22,80 @@ from bs4 import BeautifulSoup
 import youtube_dl
 import time
 
+def getPlayList(choice):
+	# If URL is taken while watching from playlist then it will get real link.
+	url = str(choice[2])
+	print '[youtube]: Opening playlist page',
+	if '&' in url:
+		url = url.split('&')
+		url = "https://www.youtube.com/playlist?"+url[1]
+	try:
+		r = requests.get(url)
+	except:
+		print('[youbot]: Not able to start internet for surfing')
+	soup = BeautifulSoup(r.content)
+	print 'Done'
+	links = soup.find_all("a",{"class": "pl-video-title-link yt-uix-tile-link yt-uix-sessionlink  spf-link "})
+	count = 0
+	file = open("youtube-links.txt","w")
+	for i in links:
+		url = str(i['href'])
+		url = url.split('&')
+		file.write("https://www.youtube.com%s\n" % url[0])
+		count+=1
+	file.close()
+	print('[youbot]: '+str(count)+' links found')
+	print('[youbot]: All links are saved in youtube-links.txt')
+	print("[youbot]: Enter those numbers which you don't want to download like: 1 2 3")
+	ignore = map(int, raw_input().split())
+	x = 1
+	file = open("youtube-links.txt","r")
+	completed = 0
+	for i in file:
+		if x in ignore:
+			print ('[youbot]: download '+ str(x)+'/'+str(count)+'] : Skip')
+    	else:
+        	print ('[youbot]: download '+ str(x)+'/'+str(count)+']')
+        	if choice[1][1] == 'v':
+        		completed += ytDownload(i)
+        	elif choice[1][1] == 'a':
+        		completed += ytAudio(i)
+    	x+=1
+	file.close()
+	print('\n\n\n[youbot]: Completed '+str(completed)+'/'+str(count-len(ignore)))
+
+def ytDownload(link):
+	ydl_opts = {}
+	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+		ydl.download([link])
+	return 1
+
+def ytAudio(link):
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([link])
+    return 1
+
+def urlDownload(aurl):
+	if aurl[1][0] == 'p':
+		getPlayList(aurl)
+	elif aurl[1][0] == 'v':
+		ytDownload(str(aurl[2]))
+		print '\n[youbot]: Downloaded'
+	elif aurl[1][0] == 'a':
+		ytAudio(str(aurl[2]))
+		print '\n[youbot]: Downloaded'
+	else:
+		print '[youbot]: Wrong syntax . . . Try again'
+
+
 def youtubeWatch(name):
 	url = "https://www.youtube.com/results?search_query="
 	print 'Before adding let me verify .',
@@ -28,11 +103,12 @@ def youtubeWatch(name):
 	print name
 	try:
 		r = requests.get(url+name)
+		print '.',
 	except:
-		print 'nooooooooo'
+		print 'Failed'
 	soup = BeautifulSoup(r.content)
 	user = soup.find_all('a',{'class': 'yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 g-hovercard yt-uix-sessionlink      spf-link '})
-	print user
+	print '.'
 	for i in user:
 		temp = i['href']
 		temp = temp.split('/')
@@ -110,7 +186,7 @@ def newChannel(name):
 		print '[youbot]: favourite.txt have been created'
 	print 'Done'
 
-def createDatabase():
+def createDatabase(uname):
 	print '\n[youbot]: OK '+uname+' Let\'s get started by creating your database'
 	time.sleep(4)
 	print '[youbot]: Our database consist of many .txt files so don\'t panic. You can later find it why are they used.'
@@ -127,10 +203,12 @@ def createDatabase():
 def urlHelp():
 	print '[youbot]: Lets talk about how to download videos and audios'
 	time.sleep(3)
-	print '[youbot]: To download video use this format "v (url)"'
+	print '[youbot]: To download video use this format "vdownload (url)"'
 	time.sleep(3)
-	print '[youbot]: And to download audio use "a (url)"'
+	print '[youbot]: And to download audio use "adownload (url)"'
 	time.sleep(3)
+	print '[youbot]: Add p in front of commands to download playlist example "pvdownload (url)" for videos same for audio "padownload (url)"'
+	time.sleep(5)
 	print '[youbot]: Videos will be downloaded in your local storage where this program is.'
 
 def remindHelp():
@@ -140,42 +218,128 @@ def remindHelp():
 	time.sleep(4)
 	print 'NOTE: channel_name have to be exactly same'
 
-print '[youbot]: Lets get started by knowing whats your name'
-time.sleep(2)
-print '[youbot]: Please enter your name :',
-uname = raw_input('>>>')
-print '[youbot]: '+uname+' Nice!  Youbot <3 '+uname
-time.sleep(3)
-print '[youbot]: Since you are new here so lets get familiar that who I am'
-time.sleep(5)
-print '[youbot]: My name is Youbot and I will help you with all the stuff'
-time.sleep(5)
-print '[youbot]: Since my developer is not that professional that\'s why i can do few stuff only'
-time.sleep(5)
-print '[youbot]: Type "youbot" so that I can tell you what I can do else type "skip"'
-comm = raw_input('>>>')
-if comm == 'youbot':
-	print '[youbot]: 1. I can download any Youtube video easily.'
-	time.sleep(4)
-	print '[youbot]: 2. I can download any Youtube playlist all you need to do is paste link which was having those playlist on side.'
-	time.sleep(6)
-	print '[youbot]: 3. I can download Youtube video in audio format and also from playlist. Its like 100 videos = 100 audio songs.'
-	time.sleep(6)
-	print '[youbot]: 4. I can remind you if there is any latest upload by any youtube channel or not.'
-	time.sleep(6)
-	print '[youbot]: That\'s it I can do this much till now'
-if comm == 'skip' or comm == 'youbot':
-	time.sleep(4)
-	print '-------------sleep4'
-	createDatabase()
-	print '----------------database ban gaya'
+def intro():
+	print '[youbot]: Lets get started by knowing whats your name'
 	time.sleep(2)
-	urlHelp()
-	time.sleep(6)
-	remindHelp()
+	print '[youbot]: Please enter your name :',
+	uname = raw_input('>>>')
+	print '[youbot]: '+uname+' Nice!  Youbot <3 '+uname
+	time.sleep(3)
+	print '[youbot]: Since you are new here so lets get familiar that who I am'
 	time.sleep(5)
-	print '[youbot]: That\'t it. You are now all set for using this program. Congratulations :D'
+	print '[youbot]: My name is Youbot and I will help you with all the stuff'
 	time.sleep(5)
-	print '[youbot]: If you need any help then type "youbot" and i will come again'
-else:
-	print '[youbot]: I have faith in you. Please type it correctly'
+	print '[youbot]: Since my developer is not that professional that\'s why i can do few stuff only'
+	time.sleep(5)
+	print '[youbot]: Type "youbot" so that I can tell you what I can do else type "skip"'
+	comm = raw_input('>>>')
+	if comm == 'youbot':
+		print '[youbot]: 1. I can download any Youtube video easily.'
+		time.sleep(4)
+		print '[youbot]: 2. I can download any Youtube playlist all you need to do is paste link which was having those playlist on side.'
+		time.sleep(6)
+		print '[youbot]: 3. I can download Youtube video in audio format and also from playlist. Its like 100 videos = 100 audio songs.'
+		time.sleep(6)
+		print '[youbot]: 4. I can remind you if there is any latest upload by any youtube channel or not.'
+		time.sleep(6)
+		print '[youbot]: That\'s it I can do this much till now'
+	if comm == 'skip' or comm == 'youbot':
+		time.sleep(4)
+		createDatabase(uname)
+		time.sleep(2)
+		urlHelp()
+		time.sleep(6)
+		remindHelp()
+		time.sleep(5)
+		print '[youbot]: That\'t it. You are now all set for using this program. Congratulations :D'
+		time.sleep(5)
+		print '[youbot]: If you need any help then type "youbot" and i will come again'
+	else:
+		print '[youbot]: I have faith in you. Please type it correctly'
+	return uname
+
+def channelRemind(num,fav):
+	name = fav[num-1]
+	file = open('youtube-channel.txt','r')
+	yc = file.read().splitlines()
+	file.close()
+	print '[youtube]: Getting updates for '+name
+	el = getLink(name,yc[num-1])
+	file = open(name+'-link.txt','r')
+	sear = file.read().splitlines()
+	file.close()
+	file = open(name+'.txt','r')
+	sear1 = file.read().splitlines()
+	file.close()
+	sn = 0
+	for i in el:
+		if sear[sn] == i['href']:
+			print 'No new Update'
+			break
+		else:
+			print '[Update]: http://www.youtube.com/'+i['href']
+		sn+=1
+
+	print '\n\n Have look at previous latest videos :\n'
+	sn = 1
+	for i in xrange(3):
+		print str(sn)+' '+sear1[i]+'	 || 	'+'http://www.youtube.com'+sear[i]
+		sn+=1
+
+
+def remind(name):
+	num = 0
+	file = open('favourite.txt','r')
+	fav = file.read().splitlines()
+	file.close()
+	if len(name) == 2:
+		for i in xrange(len(fav)):
+			if fav[i] == name:
+				channelRemind(i,name)
+				num = -1
+
+	else:
+		try:
+			file = open('youtube-channel.txt','r')
+			yc = file.read().splitlines()
+			file.close()
+			print 'Favourite list: '
+			x = 1
+			for i in fav:
+				print str(x),' ',i
+				x+=1
+			num = int(raw_input())
+		except:
+			print '[youbot]: Nothing to remind. Type addchannel (channel-name) to add some channel'
+	if num != 0:
+		channelRemind(num,fav)
+	elif num != -1:
+		print 'Error not found'
+
+def commandHelp():
+	print '[youbot]: Bot reporting for duty'
+	print '[youbot]: type "download v (url)" - download video'
+	print '[youbot]: type "download a (url)" - download audio'
+	print '[youbot]: type "download pv (url)" - download playlist video'
+	print '[youbot]: type "download pa (url)" - download playlist in audio'
+	print '[youbot]: type "addchannel (channel-name)" to add channel to your favourites'
+	print '[youbot]: type "find" to find any random video'
+	
+#uname = intro()
+uname = 'shashank'
+while True:
+	print '[youbot]: ',
+	inp = raw_input()
+	inp = inp.split(' ')
+	if inp[0] == 'bot-help':
+		commandHelp()
+	elif inp[0] == 'download':
+		urlDownload(inp)
+	elif inp[0] == 'remind':
+		remind(inp)
+	elif inp[0] == 'addchannel':
+		youtubeWatch(inp[1])
+	elif inp == 'bot-exit':
+		print 'Bye'
+	else:
+		print '[youbot]: Seems like you are lost! Say bot-help and I will come to save you :D'
