@@ -19,6 +19,9 @@ body{
      margin-bottom: 0;
 clear:none; 
 }
+.ver{
+    font-size: 11px;
+}
 .centered_div {
    padding-top: 15%;
    font-size: 50px;
@@ -28,6 +31,14 @@ clear:none;
 .blur{
 	    color: transparent;
    text-shadow: 0 0 3px red;
+}
+.left{
+    float: left;
+    position: absolute;
+}
+.right{
+    float: right;
+    position: fixed;
 }
 .block{
 	height: 100%;
