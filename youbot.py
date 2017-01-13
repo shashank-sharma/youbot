@@ -13,6 +13,7 @@ YouBot - by Shashank Sharma
 
 #issue1 : youwatch not working ... Done
 #issue2 : remind function taking input ... Done
+#issue3 : remind free code camp will not work. Make it work soon ... Removed
 
 '''
 from __future__ import unicode_literals
@@ -193,7 +194,7 @@ def getLink(name,urls):
 	file = open('youtube-channel.txt','a')
 	file.write(urls+'\n')
 	file.close()
-	url = urls
+	url = urls+'/videos'
 	print url
 	ch = requests.get(url)
 
@@ -304,7 +305,10 @@ def intro():
 	return uname
 
 def channelRemind(num,fav):
-	name = fav[num-1]
+	if num == 0:
+		name = fav
+	else:
+		name = fav[num-1]
 	file = open('youtube-channel.txt','r')
 	yc = file.read().splitlines()
 	file.close()
@@ -322,7 +326,7 @@ def channelRemind(num,fav):
 			print 'No new Update'
 			break
 		else:
-			print '[Update]: http://www.youtube.com/'+i['href']
+			print '[Update]: http://www.youtube.com'+i['href']
 		sn+=1
 
 	print '\n\n Have look at previous latest videos :\n'
@@ -339,8 +343,8 @@ def remind(name):
 		fav = file.read().splitlines()
 		file.close()
 		for i in xrange(len(fav)):
-			if fav[i] == name:
-				channelRemind(i,name)
+			if fav[i] == name[1]:
+				channelRemind(0,name[1])
 				num = -1
 
 	else:
