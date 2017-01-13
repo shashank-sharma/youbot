@@ -25,9 +25,11 @@ Youbot starts with self tutorial which shows you how to use it. At first Youbot 
 7. trending - Shows trending videos ongoing
 8. delete - Deletes ALL .txt file on that directory.  **WARNING:** Take care while deleting
 
-### Additional features
+### Features
 
 1. Youbot can recognize the playlist just by entering link of video which is part of that playlist
 2. Youbot can skip selected numbered videos from playlist
+3. Youbot can tell if there is any update regarding any channel or not.
+4. Youbot can help you to get some random videos from trending. - Need to work on this
 
 ## More updates coming soon
