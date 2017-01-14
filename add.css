@@ -3,6 +3,9 @@ body{
 	padding:0;
     margin:0;
 }
+table{
+    background-repeat: no-repeat;
+}
 .main
 {
     position:relative;
