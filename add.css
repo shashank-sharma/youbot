@@ -6,6 +6,18 @@ body{
 table{
     background-repeat: no-repeat;
 }
+.content {
+    padding:20px;
+    position:relative;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5);
+}
+.supl {
+    padding:20px;
+    position:relative;
+    background: rgb(204, 204, 204);
+    background: rgba(204, 204, 204, 0.3);
+}
 .main
 {
     position:relative;

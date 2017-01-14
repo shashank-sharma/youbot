@@ -399,8 +399,9 @@ def trending():
 		except:
 			file.write('Unknown text'+'\n')
 		files.write(str(i['href'])+'\n')
-		print str(x)+' '+i['title']
-		print '[youbot] Link: '+ 'https://www.youtube.com'+i['link']
+		print '\n'
+		print '[youbot]'+str(x)+' '+i['title']
+		print '[youbot] Link: '+ 'https://www.youtube.com'+i['href']
 		if x%5 == 0:
 			ke = raw_input('Enter any key proceed else enter quit')
 			if ke == 'quit':
