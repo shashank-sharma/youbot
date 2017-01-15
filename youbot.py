@@ -22,6 +22,7 @@ import os
 from bs4 import BeautifulSoup
 import youtube_dl
 import time
+from random import randint
 
 def txtDelete():
 	print '\n\n'
@@ -411,14 +412,43 @@ def trending():
 	files.close()
 	file.close()
 
+def randomVideo():                                         # Need best practice for this
+	print 'Generating any random video'
+	r = requests.get('https://www.youtube.com/feed/trending')
+	soup = BeautifulSoup(r.content)
+	l = soup.find_all("a",{"class": 'yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink      spf-link '})
+	file = open('random.txt','w+')
+	files = open('random-url.txt','w+')
+	x = 1
+	for i in l:
+		try:
+			file.write(str(i['title'])+'\n')
+		except:
+			file.write('Unknown text'+'\n')
+		files.write(str(i['href'])+'\n')
+	files.close()
+	file.close()
+
+	file = open('random.txt','r')
+	uname = file.read().splitlines()
+	file.close()
+	files = open('random-url.txt','r')
+	uurl = files.read().splitlines()
+	files.close()
+	nu = randint(0,len(uname))
+	print '\n\n[youbot]: '+uname[nu]
+	print '[youbot]: https://www.youtube.com'+uurl[nu]
+
 #if not os.path.isfile('./user.txt'):
 #	uname = intro()
-try:
+'''try:
 	file = open('user.txt','r')
 	uname = file.read().splitlines()
 	file.close()
 except:
 	uname = intro()
+'''
+uname = 'hey'
 print '\n\n\n'
 logo()
 print '\n\n\n'
@@ -439,6 +469,8 @@ while True:
 	elif inp[0] == 'bot-exit':
 		print 'Bye'
 		exit()
+	elif inp[0] == 'random':
+		randomVideo()
 	elif inp[0] == 'delete':
 		txtDelete()
 	else:
