@@ -374,14 +374,16 @@ def remind(name):
 
 def commandHelp():
 	print '[youbot]: Bot reporting for duty'
+	print '[youbot]: type "add (url)" - Add youtube url to download stack'
 	print '[youbot]: type "download v (url)" - download video'
 	print '[youbot]: type "download a (url)" - download audio'
 	print '[youbot]: type "download pv (url)" - download playlist video'
 	print '[youbot]: type "download pa (url)" - download playlist in audio'
 	print '[youbot]: type "addchannel (channel-name)" to add channel to your favourites'
-	print '[youbot]: type "find" to find any random video'
 	print '[youbot]: type "remind" to get all favourite channel list'
 	print '[youbot]: type "trending" to get all trending videos available'
+	print '[youbot]: type "random" to get any 1 random video'
+	print '[youbot]: type "delete" to erase everything. Yes Everything'
 
 def trending():
 	print "[youbot]: Let's see what is trending"
@@ -439,16 +441,36 @@ def randomVideo():                                         # Need best practice 
 	print '\n\n[youbot]: '+uname[nu]
 	print '[youbot]: https://www.youtube.com'+uurl[nu]
 
+def addUrl(url):
+
+	file = open('url-stack.txt','a+')
+	print '[youbot]: Verifying given URL'
+	try:
+		r = requests.get(url)
+		file.write(url+'\n')
+		print 'Successfully added'
+	except:
+		print '[youbot]: URL is not valid'
+
+def downloadUrl():
+
+	file = open('url-stack.txt','r')
+	uname = file.read().splitlines()
+	file.close()
+	print '[youbot]: Currently in total you have '+str(len(uname))+' videos available'
+	print '[youbot]: Downloading . . .'
+	for i in uname:
+		ytDownload(i)
+
+
 #if not os.path.isfile('./user.txt'):
 #	uname = intro()
-'''try:
+try:
 	file = open('user.txt','r')
 	uname = file.read().splitlines()
 	file.close()
 except:
 	uname = intro()
-'''
-uname = 'hey'
 print '\n\n\n'
 logo()
 print '\n\n\n'
@@ -473,5 +495,9 @@ while True:
 		randomVideo()
 	elif inp[0] == 'delete':
 		txtDelete()
+	elif inp[0] == 'add':
+		addUrl(inp[1])
+	elif inp[0] == 'download-list':
+		downloadUrl()
 	else:
 		print '[youbot]: Seems like you are lost! Say "bot-help" and I will come to save you :D'
