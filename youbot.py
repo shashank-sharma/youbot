@@ -384,6 +384,7 @@ def commandHelp():
 	print '[youbot]: type "trending" to get all trending videos available'
 	print '[youbot]: type "random" to get any 1 random video'
 	print '[youbot]: type "delete" to erase everything. Yes Everything'
+	print '[youbot]: type "psearch (name) to search playlist related query'
 
 def trending():
 	print "[youbot]: Let's see what is trending"
@@ -462,6 +463,19 @@ def downloadUrl():
 	for i in uname:
 		ytDownload(i)
 
+def playlistSearch(name):
+	name = '+'.join(name[1:])
+	url = 'https://www.youtube.com/results?q='+name+'&sp=CAMSAhAD'
+	r = requests.get(url)
+	soup = BeautifulSoup(r.content)
+	l = soup.find_all("a",{"class": "yt-uix-sessionlink       spf-link "})
+	m = soup.find_all("a",{"class": "yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink      spf-link "})
+	print '[youbot]: '+str(len(l))+' Results found:'
+	for i in xrange(len(l)):
+		print '[youbot]: '+m[i].text
+		print l[i].text
+		print 'https://www.youtube.com'+l[i]['href']
+		print '\n'
 
 #if not os.path.isfile('./user.txt'):
 #	uname = intro()
@@ -499,5 +513,7 @@ while True:
 		addUrl(inp[1])
 	elif inp[0] == 'download-list':
 		downloadUrl()
+	elif inp[0] == 'psearch':
+		playlistSearch(inp)
 	else:
 		print '[youbot]: Seems like you are lost! Say "bot-help" and I will come to save you :D'
