@@ -470,12 +470,14 @@ def playlistSearch(name):
 	soup = BeautifulSoup(r.content)
 	l = soup.find_all("a",{"class": "yt-uix-sessionlink       spf-link "})
 	m = soup.find_all("a",{"class": "yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink      spf-link "})
-	print '[youbot]: '+str(len(l))+' Results found:'
+	print '[youbot]: '+str(len(l))+' Results found:\n'
 	for i in xrange(len(l)):
 		print '[youbot]: '+m[i].text
 		print l[i].text
 		print 'https://www.youtube.com'+l[i]['href']
 		print '\n'
+		if (i+1)%5 == 0:
+			a = raw_input('Press Enter to show more')
 
 #if not os.path.isfile('./user.txt'):
 #	uname = intro()
