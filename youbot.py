@@ -272,9 +272,7 @@ def intro():
 	time.sleep(3)
 	print '[youbot]: Since you are new here so lets get familiar that who I am'
 	time.sleep(5)
-	print '[youbot]: My name is Youbot and I will help you with all the stuff'
-	time.sleep(5)
-	print '[youbot]: Since my developer is not that professional that\'s why i can do few stuff only'
+	print '[youbot]: My name is Youbot and I will help you with all the stuff related youtube'
 	time.sleep(5)
 	print '[youbot]: Type "youbot" so that I can tell you what I can do else type "skip"'
 	comm = raw_input('>>>')
@@ -288,6 +286,10 @@ def intro():
 		print '[youbot]: 4. I can remind you if there is any latest upload by any youtube channel or not.'
 		time.sleep(6)
 		print '[youbot]: 5. I can show you all trending videos quickly.'
+		time.sleep(6)
+		print '[youbot]: 6. If you are bored then I can give you some random video suggesition'
+		time.sleep(6)
+		print '[youbot]: 7. You can search any playlist from here and make them download instantly.'
 		time.sleep(6)
 		print '[youbot]: That\'s it I can do this much till now'
 	if comm == 'skip' or comm == 'youbot':
