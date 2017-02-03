@@ -14,15 +14,38 @@ YouBot - by Shashank Sharma
 #issue1 : youwatch not working ... Done
 #issue2 : remind function taking input ... Done
 #issue3 : remind free code camp will not work. Make it work soon ... Removed
+#issue4 : Download + Buffer video ... Failed
 
 '''
 from __future__ import unicode_literals
-import requests
-import os
-from bs4 import BeautifulSoup
-import youtube_dl
-import time
-from random import randint
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+try:
+	import requests
+	import os
+	from bs4 import BeautifulSoup
+	import youtube_dl
+	import time
+	from random import randint
+	print bcolors.OKGREEN+'Import: OK'+bcolors.ENDC
+except:
+	print bcolors.FAIL+'Import: FAILED'+bcolors.ENDC
+time.sleep(1)
+
+
+
+def buffer(title):
+	p = subprocess.Popen(["/usr/bin/vlc", title+'.mp4'])
+	time.sleep(3)
+	print bcolors.FAIL+'\n\nEXIT VLC TO QUIT'+bcolors.ENDC
 
 def txtDelete():
 	print '\n\n'
@@ -41,12 +64,12 @@ def txtDelete():
 		print 'Wise decision!'
 
 def logo():
-	print '   ####    ##    ##########'
-	print '   ####    ##    ###       #'
-	print '    ####  ##     ###      #'
-	print '      ####       ##########'
-	print '      ####       ###       #'
-	print '      ####       ##########'
+	print bcolors.FAIL+'   ####    ##    ##########'+bcolors.ENDC
+	print bcolors.FAIL+'   ####    ##    ###       #'+bcolors.ENDC
+	print bcolors.FAIL+'    ####  ##     ###      #'+bcolors.ENDC
+	print bcolors.FAIL+'      ####       ##########'+bcolors.ENDC
+	print bcolors.FAIL+'      ####       ###       #'+bcolors.ENDC
+	print bcolors.FAIL+'      ####       ##########'+bcolors.ENDC
 
 def getPlayList(choice):
 	# If URL is taken while watching from playlist then it will get real link.
@@ -95,6 +118,9 @@ def ytDownload(link):
 		r = requests.get(link)
 		ydl_opts = {}
 		with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+			video_title = info_dict.get('title', None)
+			#print video_title
+			#buffer(video_title)
 			ydl.download([link])
 		print '[youbot]: Downloaded'
 		return 1
@@ -147,7 +173,7 @@ def youtubeWatch(name):
 		temp = temp.split('/')
 		if temp[1] == 'user' or temp[1] == 'channel':
 			urls = 'http://www.youtube.com'+str(i['href'])
-			print '[youbot]: Found ',temp[2]
+			print '[youbot]:'+bcolors.OKGREEN+' Found '+temp[2]+bcolors.ENDC
 			print '[youtube]: Let\' prepare your data'
 			newChannel(name)
 			print '\n\n[youbot] 2/5 Let\'s get some data related video',
@@ -159,7 +185,7 @@ def youtubeWatch(name):
 			print '\n\n[youbot] 4/5 Let me update your links',
 			updateLink(li,name)
 			print '  Done'
-			print '\n\n[youbot]: Channel Successfully updated in your local system'
+			print bcolors.OKGREEN+'\n\n[youbot]: Channel Successfully updated in your local system'+bcolors.ENDC
 			favouriteList(name)
 		else:
 			print 'Error not found'
@@ -326,10 +352,10 @@ def channelRemind(num,fav):
 	sn = 0
 	for i in el:
 		if sear[sn] == i['href']:
-			print 'No new Update'
+			print bcolors.FAIL+'\n\nNo new Update'+bcolors.ENDC
 			break
 		else:
-			print '[Update]: http://www.youtube.com'+i['href']
+			print bcolors.OKGREEN+'[Update]: http://www.youtube.com'+i['href']+bcolors.ENDC
 		sn+=1
 
 	print '\n\n Have look at previous latest videos :\n'
@@ -487,13 +513,18 @@ try:
 	file = open('user.txt','r')
 	uname = file.read().splitlines()
 	file.close()
+	print bcolors.OKGREEN+'Session found: '+uname[0]+bcolors.ENDC
+	time.sleep(1)
 except:
+	print bcolors.OKGREEN+'New Session found'+bcolors.ENDC
+	time.sleep(1)
 	uname = intro()
 print '\n\n\n'
 logo()
 print '\n\n\n'
+print 'Welcome back master '+uname[0]
 while True:
-	print '[youbot]: ',
+	print bcolors.FAIL+'[youbot]: '+bcolors.ENDC,
 	inp = raw_input()
 	inp = inp.split(' ')
 	if inp[0] == 'bot-help':
