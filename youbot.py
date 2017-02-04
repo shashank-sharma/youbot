@@ -256,29 +256,28 @@ def youtubeWatch(name):
 		if temp[1] == 'user' or temp[1] == 'channel':
 			urls = 'http://www.youtube.com'+str(i['href'])
 			print '[youbot]:'+bcolors.OKGREEN+' Found '+temp[2]+bcolors.ENDC
-			print '[youtube]: Let\' prepare your data'
+			print bcolors.BOLD+'[youtube]: Let\' prepare your data'+bcolors.ENDC
 			newChannel(name)
-			print '\n\n[youbot] 2/5 Let\'s get some data related video',
+			print bcolors.WARNING+'\n[youbot] 2/5 Let\'s get some data related video'+bcolors.ENDC
+			time.sleep(1)
 			li = getLink(name,urls)
-			print '  Done'
-			print '\n\n[youbot] 3/5 Let me update your content',
+			print bcolors.WARNING+'\n[youbot] 3/5 Let me update your content'+bcolors.ENDC,
+			time.sleep(1)
 			updateContent(li,name)
-			print '  Done'
-			print '\n\n[youbot] 4/5 Let me update your links',
+			print bcolors.WARNING+'\n[youbot] 4/5 Let me update your links'+bcolors.ENDC,
+			time.sleep(1)
 			updateLink(li,name)
-			print '  Done'
-			print bcolors.OKGREEN+'\n\n[youbot]: Channel Successfully updated in your local system'+bcolors.ENDC
 			favouriteList(name)
+			print bcolors.OKGREEN+bcolors.BOLD+'\n\n[youbot]: Channel Successfully updated in your local system'+bcolors.ENDC
 		else:
-			print 'Error not found'
+			print bcolors.FAIL+'Error not found'+bcolors.ENDC
 			break
 
 def favouriteList(name):
-	print '[youbot]: 5/5 Adding this channel to your favourites',
+	print bcolors.WARNING+'[youbot]: 5/5 Adding this channel to your favourites'+bcolors.ENDC,
 	file = open('favourite.txt','a')
 	file.write(name+'\n')
 	file.close()
-	print '  Done'
 
 def updateLink(l,name):
 	file = open(name+'-link.txt','w')
@@ -312,20 +311,19 @@ def getLink(name,urls):
 	return l
 
 def newChannel(name):
-	print '\n\n[youbot] 1/5 Creating your database'
+	print bcolors.WARNING+'\n\n[youbot] 1/5 Creating your database'+bcolors.ENDC
 	file = open(name+'.txt','w')
 	file.close()
 	file = open(name+'-link.txt','w')
 	file.close()
-	print '[youbot]: '+name+'.txt have been created'
-	print '[youbot]: '+name+'-link.txt have been created' 
+	print bcolors.OKGREEN+'[youbot]: '+name+'.txt have been created'+bcolors.ENDC
+	print bcolors.OKGREEN+'[youbot]: '+name+'-link.txt have been created' +bcolors.ENDC
 	if not os.path.isfile('./'+name+'.txt') and not os.path.isfile('./youtube-channel.txt'):
 		file = open('favourite.txt','w')
 		file.close()
 		file = open('youtube-channel.txt','w')
 		file.close()
 		print '[youbot]: favourite.txt have been created'
-	print 'Done'
 
 def createDatabase(uname):
 	print '\n[youbot]: OK '+uname+' Let\'s get started by creating your database'
@@ -366,7 +364,7 @@ def remindHelp():
 	print '[youbot]: NOTE: channel_name have to be exactly same'
 
 def intro():
-	print '[youbot]: Welcome to Youbot BETA v1.0'
+	print '[youbot]: Welcome to Youbot v1.1 BETA'
 	print '[youbot]: "Your smart bot"'
 	time.sleep(3)
 	print '[youbot]: Lets get started by knowing whats your name'
@@ -423,7 +421,7 @@ def channelRemind(num,fav):
 	file = open('youtube-channel.txt','r')
 	yc = file.read().splitlines()
 	file.close()
-	print '[youtube]: Getting updates for '+name
+	print bcolors.FAIL+'[youtube]: Getting updates for '+name+bcolors.ENDC
 	el = getLink(name,yc[num-1])
 	file = open(name+'-link.txt','r')
 	sear = file.read().splitlines()
@@ -438,6 +436,9 @@ def channelRemind(num,fav):
 			break
 		else:
 			print bcolors.OKGREEN+'[Update]: http://www.youtube.com'+i['href']+bcolors.ENDC
+			file = open(name+'-link.txt','a')
+			file.write(i['href']+'\n')
+			file.close()
 		sn+=1
 
 	print '\n\n Have look at previous latest videos :\n'
@@ -496,7 +497,7 @@ def commandHelp():
 	print '[youbot]: type "delete" to erase everything. Yes Everything'
 	print '[youbot]: type "psearch (name) to search playlist related query'
 	print '[youbot]: type "sadd" to add links in stack so that it can be downloaded later'
-	print '[youbot]: type "start-sadd" to start download from stack"'
+	print '[youbot]: type "start-sadd" to start download from stack'
 	print '[youbot]: type "bot-exit" to exit'
 
 def trending():
@@ -623,9 +624,12 @@ except:
 	uname = intro()
 print '\n\n\n'
 logo()
+time.sleep(1)
 print '\n\n\n'
 print bcolors.FAIL+'Youbot v1.1 BETA'+bcolors.ENDC
+time.sleep(1)
 print bcolors.FAIL+'Note: This is in BETA version. There are many bugs which needs to be fixed. We are working on this'
+time.sleep(1)
 print 'Welcome back master '+uname[0]
 stop = 0
 while True:
