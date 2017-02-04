@@ -40,6 +40,52 @@ except:
 	print bcolors.FAIL+'Import: FAILED'+bcolors.ENDC
 time.sleep(1)
 
+def startDownload():
+	sum = 0
+	sum1 = 0
+	try:
+		file = open("download-list.txt","r")
+		links = file.read().splitlines()
+		file.close()
+		print bcolors.OKGREEN+'Links-found: OK'+bcolors.ENDC
+		print bcolors.OKGREEN+'Total-links: '+str(len(links))+bcolors.ENDC
+	except:
+		print bcolors.FAIL+'\nLinks-found: FAILED'+bcolors.ENDC
+		return
+	for i in links:
+		print bcolors.WARNING+'URL: '+str(i)+bcolors.ENDC
+		che = ytDownload(i)
+		if che == 1:
+			sum+=1
+		else:
+			sum1+=1
+	print bcolors.OKGREEN+'Total downloads: '+str(sum)+bcolors.ENDC
+	print bcolors.FAIL+'Failed downloads: '+str(sum1)+bcolors.ENDC
+
+
+
+def linkAdd(link):
+	try:
+		print '\nAdding: '+str(link[1])
+		file = open("download-list.txt","a")
+		file.write(link+'\n')
+		file.close()
+		print bcolors.OKGREEN+'Link added: OK'
+	except:
+		linkStack = []
+		print 'Keep pasting link [Type "done" to quit]:'
+		while True:
+			print bcolors.FAIL+'[youbot/linkAdd]: '+bcolors.ENDC,
+			link = raw_input()
+			if link == 'done':
+				break
+			else:
+				linkStack.append(link)
+		for i in linkStack:
+			file = open("download-list.txt","a")
+			file.write(i+'\n')
+			file.close()
+		print bcolors.OKGREEN+'Successfully Added: OK'+bcolors.ENDC
 
 
 def buffer(title):
@@ -50,14 +96,14 @@ def buffer(title):
 def txtDelete():
 	print '\n\n'
 	print '[youbot]: You are trying to remove some part of my memory from your local storage.'
-	print '[youbot]: This command will delete ALL .txt file present in that directory. Make sure your program is isolated in seperate folder'
+	print bcolors.FAIL+'[youbot]: This command will delete ALL .txt file present in that directory. Make sure your program is isolated in seperate folder'+bcolors.ENDC
 	a = raw_input('[youbot]: Type "Y" to delete else "N": ')
 	if a == 'y' or a == 'Y':
 		filelist = [ f for f in os.listdir(".") if f.endswith(".txt") ]
 		x = 0
 		for f in filelist:
 			x+=1
-			print '[youbot]: Deleting: ' ,f
+			print bcolors.FAIL+'[youbot]: Deleting: ' ,f+bcolors.ENDC
 			os.remove(f)
 		print '\n[youbot]: Successfuly deleted '+str(x)+' files'
 	else:
@@ -115,12 +161,24 @@ def getPlayList(choice):
 
 def ytDownload(link):
 	try:
-		r = requests.get(link)
+		try:
+			r = requests.get(link)
+			print bcolors.OKGREEN+'Connection: OK'+bcolors.ENDC
+		except:
+			s = 0
+			while True:
+				try:
+					r = requests.get(link)
+					print bcolors.OKGREEN+'Connection: OK'+bcolors.ENDC
+					break
+				except:
+					if s >= 3:
+						print bcolors.FAIL+'Connection: FAILED'+bcolors.ENDC
+						break
+					print bcolors.WARNING+'Trying ...'+bcolors.ENDC
+					s+=1
 		ydl_opts = {}
 		with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-			video_title = info_dict.get('title', None)
-			#print video_title
-			#buffer(video_title)
 			ydl.download([link])
 		print '[youbot]: Downloaded'
 		return 1
@@ -413,11 +471,20 @@ def commandHelp():
 	print '[youbot]: type "random" to get any 1 random video'
 	print '[youbot]: type "delete" to erase everything. Yes Everything'
 	print '[youbot]: type "psearch (name) to search playlist related query'
+	print '[youbot]: type "sadd" to add links in stack so that it can be downloaded later'
+	print '[youbot]: type "start-sadd" to start download from stack"'
+	print '[youbot]: type "bot-exit" to exit'
 
 def trending():
 	print "[youbot]: Let's see what is trending"
 	url = 'https://www.youtube.com/feed/trending'
-	r = requests.get(url)
+	print bcolors.WARNING+'\nURL: '+str(url)+bcolors.ENDC
+	try:
+		r = requests.get(url)
+		print bcolors.OKGREEN+'Connection: OK'+bcolors.ENDC
+	except:
+		print bcolors.FAIL+'Connection: FAILED'+bcolors.ENDC
+		return
 	soup = BeautifulSoup(r.content)
 	l = soup.find_all("a",{"class": 'yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink      spf-link '})
 	print '[youbot]: Creating file trending-name.txt'
@@ -432,14 +499,14 @@ def trending():
 			file.write('Unknown text'+'\n')
 		files.write(str(i['href'])+'\n')
 		print '\n'
-		print '[youbot]'+str(x)+' '+i['title']
-		print '[youbot] Link: '+ 'https://www.youtube.com'+i['href']
+		print bcolors.WARNING+'[youbot]'+str(x)+'. '+i['title']+bcolors.ENDC
+		print bcolors.OKBLUE+'[youbot] Link: '+ 'https://www.youtube.com'+i['href']+bcolors.ENDC
 		if x%5 == 0:
 			ke = raw_input('Enter any key proceed else enter quit')
 			if ke == 'quit':
 				break
 		x+=1
-	print '[youbot]: Total videos found: '+str(x)
+	print bcolors.OKGREEN+'[youbot]: Total videos found: '+str(x)+bcolors.ENDC
 	files.close()
 	file.close()
 
@@ -500,12 +567,22 @@ def playlistSearch(name):
 	m = soup.find_all("a",{"class": "yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink      spf-link "})
 	print '[youbot]: '+str(len(l))+' Results found:\n'
 	for i in xrange(len(l)):
-		print '[youbot]: '+m[i].text
-		print l[i].text
+		print bcolors.WARNING+'[youbot]: '+str(i+1)+'. '+m[i].text+bcolors.ENDC
+		print bcolors.OKBLUE+l[i].text+bcolors.ENDC
 		print 'https://www.youtube.com'+l[i]['href']
 		print '\n'
 		if (i+1)%5 == 0:
 			a = raw_input('Press Enter to show more')
+
+def status():
+	print bcolors.OKGREEN+'Status:'+bcolors.ENDC
+	time.sleep(1)
+	print bcolors.OKGREEN+'Robots: OFF'+bcolors.ENDC
+	filelist = [ f for f in os.listdir(".") if f.endswith(".txt") ]
+	for i in filelist:
+		print bcolors.OKBLUE+'File: '+str(i)+bcolors.ENDC
+	print bcolors.OKGREEN+'Total Files: '+str(len(filelist))+bcolors.ENDC
+	time.sleep(2)
 
 #if not os.path.isfile('./user.txt'):
 #	uname = intro()
@@ -515,13 +592,15 @@ try:
 	file.close()
 	print bcolors.OKGREEN+'Session found: '+uname[0]+bcolors.ENDC
 	time.sleep(1)
+	status()
 except:
 	print bcolors.OKGREEN+'New Session found'+bcolors.ENDC
-	time.sleep(1)
+	time.sleep(2)
 	uname = intro()
 print '\n\n\n'
 logo()
 print '\n\n\n'
+print bcolors.FAIL+'Youbot v1.1 BETA'+bcolors.ENDC
 print 'Welcome back master '+uname[0]
 while True:
 	print bcolors.FAIL+'[youbot]: '+bcolors.ENDC,
@@ -550,5 +629,13 @@ while True:
 		downloadUrl()
 	elif inp[0] == 'psearch':
 		playlistSearch(inp)
+	elif inp[0] == 'sadd':
+		linkAdd(inp)
+	elif inp[0] == 'start-sadd':
+		startDownload()
+	elif inp[0] == 'cls':
+		os.system('clear')
+	elif inp[0] == '':
+		pass
 	else:
 		print '[youbot]: Seems like you are lost! Say "bot-help" and I will come to save you :D'
