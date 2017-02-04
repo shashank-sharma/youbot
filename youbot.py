@@ -15,6 +15,30 @@ YouBot - by Shashank Sharma
 #issue2 : remind function taking input ... Done
 #issue3 : remind free code camp will not work. Make it work soon ... Removed
 #issue4 : Download + Buffer video ... Failed
+#issue5 : Playlist is getting only 100 videos
+
+Version 1.0 BETA:
+UPDATES:
+1. Download video+audio.
+2. Download playlist as video+audio.
+3. Get updates on your favourate youtube channel.
+4. Interactive youbot to help you.
+5. Add and delete your favourate channels.
+6. Delete all txt files in one go.
+
+Version 1.0
+UPDATES:
+1. Fix bug for channel reminder.
+2. Fix program for some end cases.
+
+Version 1.1 BETA:
+UPDATES:
+1. Added random function to get random video.
+2. Quick access to various playlist by searching through terminal.
+3. Get trending videos in one go.
+4. Added colours in output.
+5. Stack to download your favourate videos quickly.
+
 
 '''
 from __future__ import unicode_literals
@@ -601,7 +625,9 @@ print '\n\n\n'
 logo()
 print '\n\n\n'
 print bcolors.FAIL+'Youbot v1.1 BETA'+bcolors.ENDC
+print bcolors.FAIL+'Note: This is in BETA version. There are many bugs which needs to be fixed. We are working on this'
 print 'Welcome back master '+uname[0]
+stop = 0
 while True:
 	print bcolors.FAIL+'[youbot]: '+bcolors.ENDC,
 	inp = raw_input()
@@ -637,5 +663,25 @@ while True:
 		os.system('clear')
 	elif inp[0] == '':
 		pass
+	elif inp[0] == 'stop':
+		if stop == 0:
+			print bcolors.FAIL+'\n\n\nBANG ...'+bcolors.ENDC
+			time.sleep(2)
+			print bcolors.FAIL+'\n\nBANG ...'+bcolors.ENDC,
+			time.sleep(2)
+			print 'BANG ... ',
+			time.sleep(1)
+			print bcolors.FAIL+'BANG ... '+bcolors.ENDC,
+			time.sleep(1)
+			print 'BANG ...'
+			print '\n\n\nYou just killed youbot. Now he will not help you'
+			stop = 1
+		else:
+			print bcolors.FAIL+'Want to shoot dead body'+bcolors.ENDC
+			time.sleep(1)
+			print bcolors.FAIL+'How cruel'+bcolors.ENDC
 	else:
-		print '[youbot]: Seems like you are lost! Say "bot-help" and I will come to save you :D'
+		if stop == 1:
+			pass
+		else:
+			print '[youbot]: Seems like you are lost! Say "bot-help" and I will come to save you :D'
