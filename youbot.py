@@ -10,13 +10,16 @@
 
 YouBot - by Shashank Sharma
 
+******************************************************************************************
 
-#issue1 : youwatch not working ... Done
-#issue2 : remind function taking input ... Done
-#issue3 : remind free code camp will not work. Make it work soon ... Removed
-#issue4 : Download + Buffer video ... Failed
-#issue5 : Playlist is getting only 100 videos
+#issue1 : youwatch not working                                                        Done
+#issue2 : remind function taking input                                                Done
+#issue3 : remind free code camp will not work. Make it work soon                      Done
+#issue4 : Download + Buffer video                                                      -
+#issue5 : Playlist is getting only 100 videos.                                         -
+#issue6 : 2 URL add stack function created.                                            -
 
+******************************************************************************************
 Version 1.0 BETA:
 UPDATES:
 1. Download video+audio.
@@ -26,7 +29,9 @@ UPDATES:
 5. Add and delete your favourate channels.
 6. Delete all txt files in one go.
 
+-------------
 Version 1.0
+-------------
 UPDATES:
 1. Fix bug for channel reminder.
 2. Fix program for some end cases.
@@ -39,6 +44,12 @@ UPDATES:
 4. Added colours in output.
 5. Stack to download your favourate videos quickly.
 
+-------------
+Version 1.1:
+-------------
+UPDATES:
+1. Fix duplicate functions bug.
+2. Need more test cases.
 
 '''
 from __future__ import unicode_literals
@@ -626,10 +637,10 @@ print '\n\n\n'
 logo()
 time.sleep(1)
 print '\n\n\n'
-print bcolors.FAIL+'Youbot v1.1 BETA'+bcolors.ENDC
+print bcolors.FAIL+'Youbot v1.1'+bcolors.ENDC
 time.sleep(1)
-print bcolors.FAIL+'Note: This is in BETA version. There are many bugs which needs to be fixed. We are working on this'
-time.sleep(1)
+#print bcolors.FAIL+'Note: This is in BETA version. There are many bugs which needs to be fixed. We are working on this'
+#time.sleep(1)
 print 'Welcome back master '+uname[0]
 stop = 0
 while True:
